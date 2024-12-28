@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "965447066661",
+    "project_id": "meet-fit",
+    "storage_bucket": "meet-fit.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965447066661:android:d869ae738be643cb024bcc",
+        "android_client_info": {
+          "package_name": "com.example.meet_fit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHUMIlQdm-K_dst4tzWUYEQSzW-HraN4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

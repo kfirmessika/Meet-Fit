@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/login">
+
+    <fragment
+        android:id="@+id/register"
+        android:name="com.example.meet_fit.fragmetns.register"
+        android:label="register" >
+        <action
+            android:id="@+id/action_register_to_userinfo"
+            app:destination="@id/userinfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/userinfo"
+        android:name="com.example.meet_fit.fragmetns.userinfo"
+        android:label="userinfo" >
+        <action
+            android:id="@+id/action_userinfo_to_login2"
+            app:destination="@id/login" />
+    </fragment>
+    <fragment
+        android:id="@+id/login"
+        android:name="com.example.meet_fit.fragmetns.login"
+        android:label="login" >
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/register" />
+        <action
+            android:id="@+id/action_login_to_homepage"
+            app:destination="@id/homepage" />
+    </fragment>
+    <fragment
+        android:id="@+id/homepage"
+        android:name="com.example.meet_fit.fragmetns.homepage"
+        android:label="fragment_homepage"
+        tools:layout="@layout/fragment_homepage" />
+</navigation>

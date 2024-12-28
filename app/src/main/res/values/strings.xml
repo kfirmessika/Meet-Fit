@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">Fit-Meet</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="activities">
+        <item>Gym</item>
+        <item>Running</item>
+        <item>Cycling</item>
+        <item>Swimming</item>
+        <item>Hiking</item>
+        <item>Triathlon</item>
+    </string-array>
+    <string-array name="phone">
+        <item>050</item>
+        <item>052</item>
+        <item>053</item>
+        <item>054</item>
+        <item>058</item>
+    </string-array>
+    <string-array name="age_ranges">
+        <item>18-30</item>
+        <item>31-40</item>
+        <item>41-50</item>
+        <item>51-60</item>
+        <item>61-70</item>
+        <item>71-80</item>
+        <item>81-90</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="spFitnessLevel">
+        <item>Professional</item>
+        <item>Very Good</item>
+        <item>Mediocre</item>
+        <item>Beginner</item>
+    </string-array>
+    <string-array name="location">
+        <item>Afula</item>
+        <item>Acre (Akko)</item>
+        <item>Arad</item>
+        <item>Ashdod</item>
+        <item>Ashkelon</item>
+        <item>Bat Yam</item>
+        <item>Beer Sheva</item>
+        <item>Beit Jann</item>
+        <item>Beit Shemesh</item>
+        <item>Bnei Brak</item>
+        <item>Caesarea</item>
+        <item>Dimona</item>
+        <item>Daliyat al-Karmel</item>
+        <item>Eilat</item>
+        <item>Elyakhin</item>
+        <item>Even Yehuda</item>
+        <item>Gan Yavne</item>
+        <item>Givat Shmuel</item>
+        <item>Givatayim</item>
+        <item>Hadera</item>
+        <item>Haifa</item>
+        <item>Herzliya</item>
+        <item>Holon</item>
+        <item>Isfiya</item>
+        <item>Jerusalem</item>
+        <item>Karmiel</item>
+        <item>Kfar Saba</item>
+        <item>Kiryat Bialik</item>
+        <item>Kiryat Gat</item>
+        <item>Kiryat Malakhi</item>
+        <item>Kiryat Motzkin</item>
+        <item>Kiryat Shmona</item>
+        <item>Kiryat Yam</item>
+        <item>Malot-Tarshiha</item>
+        <item>Migdal HaEmek</item>
+        <item>Modiin-Maccabim-Reut</item>
+        <item>Nahariya</item>
+        <item>Nesher</item>
+        <item>Netanya</item>
+        <item>Ofakim</item>
+        <item>Or Akiva</item>
+        <item>Petah Tikva</item>
+        <item>Qalansawe</item>
+        <item>Raanana</item>
+        <item>Ramat Gan</item>
+        <item>Ramat HaSharon</item>
+        <item>Rehovot</item>
+        <item>Rishon LeZion</item>
+        <item>Rosh HaAyin</item>
+        <item>Sakhnin</item>
+        <item>Sderot</item>
+        <item>Shfaram</item>
+        <item>Safed (Tzfat)</item>
+        <item>Taibe</item>
+        <item>Tiberias</item>
+        <item>Tirat Carmel</item>
+        <item>Tel Aviv</item>
+        <item>Tira</item>
+        <item>Umm al-Fahm</item>
+        <item>Yavne</item>
+        <item>Yokneam</item>
+        <item>Zichron Yaakov</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/background_color">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_background"
+        android:gravity="center_horizontal">
+
+
+        <!-- Profile Picture -->
+        <ImageView
+            android:id="@+id/ivProfilePicture"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@drawable/meet_fit_logo"
+            android:contentDescription="Profile Picture"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/circle_background"
+            android:elevation="4dp" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About Me"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:textColor="@color/title_color" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone Number"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/text_primary" />
+
+        <!-- Phone Number Input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <!-- Spinner for Starting Digits -->
+            <Spinner
+                android:id="@+id/spPhonePrefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/phone"
+                android:background="@drawable/rounded_spinner"
+                android:padding="12dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- EditText for Remaining Digits -->
+            <EditText
+                android:id="@+id/etPhoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="phone"
+                android:inputType="number"
+                android:maxLength="7"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <!-- Age Selector -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Age Range"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/text_primary" />
+
+        <Spinner
+            android:id="@+id/spAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:spinnerMode="dropdown"
+            android:entries="@array/age_ranges"
+            android:background="@drawable/rounded_spinner"
+            android:minHeight="48dp"
+            android:padding="12dp" />
+
+        <!-- Activities Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Your Activities"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/text_primary" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <CheckBox
+                android:id="@+id/cbGym"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gym"
+                android:buttonTint="@color/checkbox_color"
+                android:textColor="@color/text_primary" />
+
+            <CheckBox
+                android:id="@+id/cbBiking"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Biking"
+                android:buttonTint="@color/checkbox_color"
+                android:textColor="@color/text_primary" />
+
+            <CheckBox
+                android:id="@+id/cbHiking"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hiking"
+                android:buttonTint="@color/checkbox_color"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <CheckBox
+                android:id="@+id/cbRunning"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Running"
+                android:buttonTint="@color/checkbox_color"
+                android:textColor="@color/text_primary" />
+
+            <CheckBox
+                android:id="@+id/cbSwimming"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Swimming"
+                android:buttonTint="@color/checkbox_color"
+                android:textColor="@color/text_primary"
+                />
+            <CheckBox
+                android:id="@+id/cbOther"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Other"
+                android:buttonTint="@color/checkbox_color"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+
+
+
+        <!-- Fitness Level -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="How do you consider your fitness level?"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/text_primary" />
+
+        <Spinner
+            android:id="@+id/spFitnessLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/rounded_spinner"
+            android:entries="@array/spFitnessLevel"
+            android:minHeight="48dp"
+            android:padding="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose a location "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/text_primary" />
+
+        <!-- Location -->
+        <Spinner
+            android:id="@+id/etLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/location"
+            android:hint="Enter location"
+
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/text_primary"
+            />
+
+        <!-- About Me -->
+        <EditText
+            android:id="@+id/etAboutMe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="About me"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp"
+            android:textColor="@color/text_primary"
+            android:minHeight="100dp" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:backgroundTint="@color/button_color"
+            android:textColor="@color/white"
+            android:padding="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:elevation="2dp" />
+    </LinearLayout>
+</ScrollView>
