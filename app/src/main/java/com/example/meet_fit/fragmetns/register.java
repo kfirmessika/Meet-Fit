@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -139,6 +140,12 @@ public class register extends Fragment {
         // Check password verification
         if (!PasswordVerificationValidation(user.getPassword(), passwordVerification)) {
             Toast.makeText(requireContext(), "Passwords do not match. Please try again.", Toast.LENGTH_SHORT).show();
+            return ;
+        }
+        CheckBox terms = view.findViewById(R.id.cbAgree);
+        if(!terms.isChecked())
+        {
+            Toast.makeText(requireContext(), "Please agree to terms and conditions", Toast.LENGTH_SHORT).show();
             return ;
         }
 

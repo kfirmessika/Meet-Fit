@@ -1,14 +1,7 @@
 <resources>
     <string name="app_name">Fit-Meet</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string-array name="activities">
-        <item>Gym</item>
-        <item>Running</item>
-        <item>Cycling</item>
-        <item>Swimming</item>
-        <item>Hiking</item>
-        <item>Triathlon</item>
-    </string-array>
+
     <string-array name="phone">
         <item>050</item>
         <item>052</item>

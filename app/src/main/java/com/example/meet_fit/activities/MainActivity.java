@@ -1,6 +1,7 @@
 package com.example.meet_fit.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.Navigation;
 
 import com.example.meet_fit.R;
+import com.example.meet_fit.adapters.RecyclerAdapter;
 import com.example.meet_fit.models.Info;
 import com.example.meet_fit.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -37,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+
+
+
+
+
         });
 
     }
@@ -191,6 +201,65 @@ public class MainActivity extends AppCompatActivity {
                         callback.onSaveComplete(false);
                     }
                 });
+    }
+    public void fetchDataFromFirebase(RecyclerAdapter recycleAdapter,List <Info> infoList,List <Info> originalList) {
+        // Listen for data changes in the "users" node
+
+        if (infoList!= null)
+        {
+            infoList.clear();
+        }
+       DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                // Loop through all UIDs in the "users" node
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    // Access the "info" node for each user
+                    DataSnapshot infoSnapshot = userSnapshot.child("info");
+
+                    // Only proceed if "info" exists
+                    if (infoSnapshot.exists()) {
+                        Info info = new Info();
+                        // Get individual fields
+                        info.setAge(infoSnapshot.child("age").getValue(String.class));
+                        info.setFitLevel(infoSnapshot.child("fitLevel").getValue(String.class));
+                        info.setAboutMe(infoSnapshot.child("aboutMe").getValue(String.class));
+                        info.setLocation(infoSnapshot.child("location").getValue(String.class));
+                        info.setPhoto(infoSnapshot.child("photo").getValue(String.class));
+
+                        // Build the activities list
+                        List<String> activities = new ArrayList<>();
+                        for (DataSnapshot activitySnapshot : infoSnapshot.child("activities").getChildren()) {
+                            String activity = activitySnapshot.getValue(String.class);
+                            if (activity != null) {
+                                activities.add(activity);
+                            }
+                        }
+                        info.setActivities(activities);
+
+                        // Add the Info object to the list
+
+
+                        infoList.add(info);
+                        originalList.add(info);
+
+                    }
+                }
+
+                // Notify the adapter that data has changed
+                recycleAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Log the error for debugging
+                Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
+            }
+        });
+
     }
 
 }

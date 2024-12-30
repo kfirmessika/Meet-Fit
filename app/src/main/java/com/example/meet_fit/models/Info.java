@@ -9,15 +9,34 @@ public class Info {
     private String aboutMe;
     private String location;
     private String phoneNumber;
+    private String photo;
 
 
-    public Info(List<String> activities, String phoneNumber, String location, String fitLevel, String aboutMe, String age) {
+    public Info(List<String> activities, String age, String fitLevel, String aboutMe, String location, String phoneNumber, String photo) {
         this.activities = activities;
-        this.phoneNumber = phoneNumber;
-        this.location = location;
+        this.age = age;
         this.fitLevel = fitLevel;
         this.aboutMe = aboutMe;
+        this.location = location;
+        this.phoneNumber = phoneNumber;
+        this.photo = photo;
+    }
+
+    public Info(List<String> activities, String age, String fitLevel, String aboutMe, String location, String photo) {
+        this.activities = activities;
         this.age = age;
+        this.fitLevel = fitLevel;
+        this.aboutMe = aboutMe;
+        this.location = location;
+        this.photo = photo;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public String getPhoneNumber() {

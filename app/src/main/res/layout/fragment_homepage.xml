@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmetns.homepage">
+    android:orientation="vertical"
+    android:background="@color/background_color">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- RecyclerView for the main content -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-</FrameLayout>
+    <!-- Bottom bar with two buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:padding="10dp">
+
+        <!-- Settings button aligned to the left -->
+
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start"
+            android:background="@drawable/settings" />
+
+        <!-- Spacer to push buttons apart -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <!-- Filter button aligned to the right -->
+        <Button
+            android:id="@+id/btnFilter"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:background="@drawable/filter" />
+    </LinearLayout>
+
+</LinearLayout>

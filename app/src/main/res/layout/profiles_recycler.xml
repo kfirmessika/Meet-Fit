@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_color">
+
+    <!-- Top "Background Image" Area -->
+
+
+    <!-- Profile + Name + Location Container -->
+    <LinearLayout
+        android:id="@+id/profileContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:background="@drawable/img">
+
+        <!-- Profile Picture -->
+        <ImageView
+            android:id="@+id/ivProfilePicture"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/meet_fit_logo"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="25dp"/>
+
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Christian Slater"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="4dp" />
+
+
+
+    </LinearLayout>
+
+    <!-- Stats Section -->
+    <!-- Simulating "Card" appearance with a white background and padding -->
+    <LinearLayout
+        android:id="@+id/cardStats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:layout_marginBottom="0dp">
+
+        <!-- Row for Labels: Fit Level, Age, Location -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvFitLevel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Fit Level"
+                android:textColor="@color/title_color"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Age"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/title_color" />
+
+            <TextView
+                android:id="@+id/tvLocationStat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Location"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/title_color" />
+        </LinearLayout>
+
+        <!-- Row for Values: Fit Level, Age, Location -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/tvFitLevelValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Intermediate"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tvAgeValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="29"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tvLocationStatValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="New York"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+    <TextView
+        android:id="@+id/tvActivitiesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Activities"
+        android:textSize="18sp"
+        android:textColor="@color/title_color"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
+    </LinearLayout>
+    <!-- Activities Section -->
+    <LinearLayout
+        android:id="@+id/cardActivities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+
+        <!-- You can style these "chips" however you like using simple TextViews or custom backgrounds -->
+        <TextView
+            android:id="@+id/tvActivity1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swimming"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvActivity2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Running"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvActivity3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hiking"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <!-- You can style these "chips" however you like using simple TextViews or custom backgrounds -->
+            <TextView
+                android:id="@+id/tvActivity4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Swimming"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvActivity5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Running"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tvActivity6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hiking"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- "About Me" Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+
+    <TextView
+        android:id="@+id/tvAboutMeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About Me"
+        android:textSize="18sp"
+        android:textColor="@color/title_color"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
+
+    <!-- About Me Section -->
+    <TextView
+        android:id="@+id/tvAboutMe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Passionate about outdoor adventures, exploring new sports, and connecting with like-minded friends."
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:padding="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/about_me_background" />
+
+    <!-- Contact Button -->
+    <Button
+        android:id="@+id/btnContactMe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contact Me"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_margin="16dp"
+        android:background="@color/button_color"
+        android:textColor="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>

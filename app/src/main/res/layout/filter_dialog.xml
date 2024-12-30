@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filterScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/filterLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Activities Section -->
+        <TextView
+            android:id="@+id/tvFilterActivities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activities"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:paddingBottom="8dp" />
+        <CheckBox
+            android:id="@+id/cbGym"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gym" />
+
+        <CheckBox
+            android:id="@+id/cbBike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Biking" />
+
+        <CheckBox
+            android:id="@+id/cbHiking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hiking" />
+
+        <CheckBox
+            android:id="@+id/cbRun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Running" />
+
+
+        <CheckBox
+            android:id="@+id/cbSwim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swimmimng" />
+        <CheckBox
+            android:id="@+id/cbOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other" />
+
+
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Fitness Levels Section -->
+        <TextView
+            android:id="@+id/tvFilterFitnessLevels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fitness Levels"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:paddingBottom="8dp" />
+        <CheckBox
+            android:id="@+id/cbPro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Professional" />
+
+        <CheckBox
+            android:id="@+id/cbGood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Very Good" />
+
+        <CheckBox
+            android:id="@+id/cbMid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mediocre" />
+
+        <CheckBox
+            android:id="@+id/cbBeginner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beginner" />
+
+    </LinearLayout>
+</ScrollView>
