@@ -1,12 +1,12 @@
 package com.example.meet_fit.models;
 
 public class User {
-    private String user;
+
     private String email;
     private String password;
 
-    public User(String user, String email, String password) {
-        this.user = user;
+    public User( String email, String password) {
+
         this.email = email;
         this.password = password;
     }
@@ -14,13 +14,9 @@ public class User {
     public User() {
     }
 
-    public String getUser() {
-        return user;
-    }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+
+
 
     public String getEmail() {
         return email;

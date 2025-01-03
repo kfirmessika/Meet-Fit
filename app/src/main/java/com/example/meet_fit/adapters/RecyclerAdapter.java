@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,10 +24,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private final Context context;
     private List<Info> recycleModels;
+    private OnCallButtonClickListener onCallButtonClickListener;
 
-    public RecyclerAdapter(Context context, List<Info> recycleModels) {
+    public interface OnCallButtonClickListener {
+        void onCallButtonClick(String phoneNumber);
+    }
+
+    public RecyclerAdapter(Context context, List<Info> recycleModels,OnCallButtonClickListener listener) {
         this.context = context;
         this.recycleModels = recycleModels;
+        this.onCallButtonClickListener = listener;
     }
 
     @NonNull
@@ -46,6 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.fitLevel.setText(info.getFitLevel() != null ? info.getFitLevel() : "N/A");
         holder.aboutMe.setText(info.getAboutMe() != null ? info.getAboutMe() : "N/A");
         holder.location.setText(info.getLocation() != null ? info.getLocation() : "N/A");
+        holder.userName.setText(info.getUserName() != null ? info.getUserName() : "N/A");
 
         // Handle the activities list
         List<String> activities = info.getActivities();
@@ -64,6 +73,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         // Decode and set Base64 image
         setBase64Image(info.getPhoto(), holder.photo);
+
+        if (info.getPhoneNumber() == null || info.getPhoneNumber().isEmpty()) {
+            holder.btnContactMe.setEnabled(false); // Disable the button
+            holder.btnContactMe.setText("No Number");
+        } else {
+            holder.btnContactMe.setEnabled(true); // Enable the button
+
+
+            // Debug the phone number being passed
+            Log.d("RecyclerAdapter", "Phone number for " + info.getUserName() + ": " + info.getPhoneNumber());
+
+            holder.btnContactMe.setOnClickListener(v -> {
+                if (onCallButtonClickListener != null) {
+                    Log.d("RecyclerAdapter", "Click detected for " + info.getPhoneNumber());
+                    onCallButtonClickListener.onCallButtonClick(info.getPhoneNumber());
+                }
+            });
+        }
     }
 
     @Override
@@ -104,6 +131,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         private final TextView activity5;
         private final TextView activity6;
         private final ImageView photo;
+        private final TextView  userName;
+        private final Button btnContactMe;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -118,6 +147,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             activity5 = itemView.findViewById(R.id.tvActivity5);
             activity6 = itemView.findViewById(R.id.tvActivity6);
             photo = itemView.findViewById(R.id.ivProfilePicture);
+            userName =  itemView.findViewById(R.id.tvUserName);
+            btnContactMe = itemView.findViewById(R.id.btnContactMe);
         }
     }
 

@@ -1,7 +1,11 @@
 package com.example.meet_fit.fragmetns;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -9,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -28,6 +33,11 @@ public class homepage extends Fragment {
 
     private List<Info> infoList;
     private List<Info> originalList;
+    private List<String> selectedActivities = new ArrayList<>();
+    private List<String> selectedFitnessLevels = new ArrayList<>();
+
+
+
 
     private RecyclerAdapter recyclerAdapter;
     private DatabaseReference databaseReference;
@@ -57,35 +67,51 @@ public class homepage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the main layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_homepage, container, false);
-        Button btnSettings = view.findViewById(R.id.btnSettings);
-        Button btnFilter = view.findViewById(R.id.btnFilter);
+        View rootview = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-        // Set click listeners for buttons
-        btnSettings.setOnClickListener(v -> showSettingsPopup(v));
-        btnFilter.setOnClickListener(v -> showFilterDialog());
+        // Initialize Buttons
+        Button btnSettings = rootview.findViewById(R.id.btnSettings);
+        Button btnFilter = rootview.findViewById(R.id.btnFilter);
+
+        // Set click listeners for Buttons
+        btnSettings.setOnClickListener(v -> showSettingsDialog());
+        btnFilter.setOnClickListener(view -> showFilterDialog());
+
         // Initialize RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.rv);
+        RecyclerView recyclerView = rootview.findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Initialize the list and adapter
         infoList = new ArrayList<>();
         originalList = new ArrayList<>();
 
-        recyclerAdapter = new RecyclerAdapter(getContext(), infoList);
-        recyclerView.setAdapter(recyclerAdapter);
-        // Initialize Firebase Database reference
+
+
+        // Create Adapter with a click listener
+        recyclerAdapter = new RecyclerAdapter(getContext(), infoList, phoneNumber -> {
+            Log.d("Fragment", "Received phone number: " + phoneNumber);
+
+            if (phoneNumber != null && !TextUtils.isEmpty(phoneNumber)) {
+                // Launch the dialer
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            } else {
+                // Log an error and show a toast if the phone number is missing
+                Log.e("Fragment", "Phone number is missing!");
+                Toast.makeText(getContext(), "Phone number is missing", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
 
         // Fetch data from Firebase
-        MainActivity main = (MainActivity)getActivity();
-        assert main != null;
-        main.fetchDataFromFirebase(recyclerAdapter, infoList,originalList);
-
-
-
-
-        return view;
+        MainActivity main = (MainActivity) getActivity();
+        if (main != null) {
+            main.fetchDataFromFirebase(recyclerAdapter, infoList, originalList);
+        }
+        recyclerView.setAdapter(recyclerAdapter);
+        return rootview;
     }
 
     private void showSettingsPopup(View anchor) {
@@ -104,6 +130,7 @@ public class homepage extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.filter_dialog, null);
 
+        preselectFilters( dialogView,selectedActivities, selectedFitnessLevels);
         // Initialize CheckBoxes
         CheckBox cbRun = dialogView.findViewById(R.id.cbRun);
         CheckBox cbBike = dialogView.findViewById(R.id.cbBike);
@@ -125,7 +152,12 @@ public class homepage extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which){
                         // Collect selected filters
-                        List<String> selectedActivities = new ArrayList<>();
+                        if(selectedActivities!=null)
+                           selectedActivities.clear();
+                        if(selectedFitnessLevels!=null)
+                           selectedFitnessLevels.clear();
+
+
                         if(cbRun.isChecked()) selectedActivities.add("Running");
                         if(cbBike.isChecked()) selectedActivities.add("Biking");
                         if(cbSwim.isChecked()) selectedActivities.add("Swimming");
@@ -133,7 +165,7 @@ public class homepage extends Fragment {
                         if(cbGym.isChecked()) selectedActivities.add("Gym");
                         if(cbOther.isChecked()) selectedActivities.add("Other");
 
-                        List<String> selectedFitnessLevels = new ArrayList<>();
+
                         if(cbPro.isChecked()) selectedFitnessLevels.add("Professional");
                         if(cbGood.isChecked()) selectedFitnessLevels.add("Very Good");
                         if(cbMid.isChecked()) selectedFitnessLevels.add("Mediocre");
@@ -172,6 +204,86 @@ public class homepage extends Fragment {
         infoList.addAll(filteredList);
         recyclerAdapter.notifyDataSetChanged();
     }
+
+    private void preselectFilters(View dialogView, List<String> selectedActivities, List<String> selectedFitnessLevels) {
+
+
+        // Find activity checkboxes
+        CheckBox cbRun = dialogView.findViewById(R.id.cbRun);
+        CheckBox cbBike = dialogView.findViewById(R.id.cbBike);
+        CheckBox cbSwim = dialogView.findViewById(R.id.cbSwim);
+        CheckBox cbHiking = dialogView.findViewById(R.id.cbHiking);
+        CheckBox cbGym = dialogView.findViewById(R.id.cbGym);
+        CheckBox cbOther = dialogView.findViewById(R.id.cbOther);
+
+        // Find fitness level checkboxes
+        CheckBox cbPro = dialogView.findViewById(R.id.cbPro);
+        CheckBox cbGood = dialogView.findViewById(R.id.cbGood);
+        CheckBox cbMid = dialogView.findViewById(R.id.cbMid);
+        CheckBox cbBeginner = dialogView.findViewById(R.id.cbBeginner);
+
+        // Preselect activity checkboxes
+        if (selectedActivities.contains("Running")) cbRun.setChecked(true);
+        if (selectedActivities.contains("Biking")) cbBike.setChecked(true);
+        if (selectedActivities.contains("Swimming")) cbSwim.setChecked(true);
+        if (selectedActivities.contains("Hiking")) cbHiking.setChecked(true);
+        if (selectedActivities.contains("Gym")) cbGym.setChecked(true);
+        if (selectedActivities.contains("Other")) cbOther.setChecked(true);
+
+        // Preselect fitness level checkboxes
+        if (selectedFitnessLevels.contains("Professional")) cbPro.setChecked(true);
+        if (selectedFitnessLevels.contains("Very Good")) cbGood.setChecked(true);
+        if (selectedFitnessLevels.contains("Mediocre")) cbMid.setChecked(true);
+        if (selectedFitnessLevels.contains("Beginner")) cbBeginner.setChecked(true);
+    }
+
+    public void showSettingsDialog() {
+
+        // Inflate the dialog layout
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View dialogView = inflater.inflate(R.layout.settings_diaglog, null);
+
+        LayoutInflater inflater2 = LayoutInflater.from(getContext());
+        View rootView = inflater2.inflate(R.layout.fragment_homepage, null);
+
+
+        // Create the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Initialize buttons
+        Button btnMyProfile = dialogView.findViewById(R.id.btn_my_profile);
+        Button btnChangeSignInData = dialogView.findViewById(R.id.btn_change_signin_data);
+        Button btnLogOut = dialogView.findViewById(R.id.btn_log_out);
+
+        MainActivity main = (MainActivity) getActivity();
+        assert main != null;
+
+        // Set button actions
+        btnMyProfile.setOnClickListener(v -> {
+            // Handle My Profile click
+            main.homepageToMyProfile();
+            dialog.cancel();
+        });
+
+        btnChangeSignInData.setOnClickListener(v -> {
+            // Handle Change Sign in Data click
+            main.homepageToUpdateAuthentication();
+            dialog.cancel();
+        });
+
+        btnLogOut.setOnClickListener(v -> {
+            // Handle Log Out click
+            main.homepageToLogin();
+            dialog.cancel();
+        });
+
+
+    }
+
 
 
 

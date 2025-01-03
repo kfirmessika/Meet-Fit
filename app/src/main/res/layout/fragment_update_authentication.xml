@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center|top"
+    android:background="@drawable/background_gradient2">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/meet_fit_logo"
+        android:contentDescription="App Logo"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="30dp"/>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvSignInTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Authenctication"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/card_background"
+        android:elevation="8dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center">
+
+
+
+
+        <!-- Old Email Field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_email"
+                android:layout_marginEnd="8dp" />
+
+            <EditText
+                android:id="@+id/etOldEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Current Email"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp" />
+        </LinearLayout>
+
+
+        <!-- Old Password Field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_password"
+                android:layout_marginEnd="8dp" />
+
+            <EditText
+                android:id="@+id/etOldPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Current Password"
+                android:inputType="textPassword"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <!-- Divider (Optional) -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- New Email Field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_email"
+                android:layout_marginEnd="8dp" />
+
+            <EditText
+                android:id="@+id/etNewEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Email"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <!-- New Password Field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_password"
+                android:layout_marginEnd="8dp" />
+
+            <EditText
+                android:id="@+id/etNewPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="New Password"
+                android:inputType="textPassword"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp" />
+        </LinearLayout>
+
+        <!-- Update Button -->
+        <Button
+            android:id="@+id/btnUpdateCredentials"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Credentials"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/button_color"
+            android:textColor="@android:color/white"
+            android:elevation="2dp"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+</LinearLayout>
+

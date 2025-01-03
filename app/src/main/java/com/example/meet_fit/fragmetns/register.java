@@ -76,13 +76,12 @@ public class register extends Fragment {
             @Override
             public void onClick(View view) {
                 MainActivity main = (MainActivity) getActivity();
-                String username = ((EditText)rootview.findViewById(R.id.etUsername)).getText().toString();
                 String email = ((EditText)rootview.findViewById(R.id.etEmail)).getText().toString();
                 String password = ((EditText)rootview.findViewById(R.id.etPassword)).getText().toString();
                 String passwordVerification = ((EditText)rootview.findViewById(R.id.etConfirmPassword)).getText().toString();
                 assert main != null;
-                User user = new User(username,  email, password);
-              ValidateSignUpInputs(user,passwordVerification, rootview, main);
+                User user = new User(email, password);
+                ValidateSignUpInputs( user ,passwordVerification, rootview, main);
 
 
 
@@ -122,10 +121,7 @@ public class register extends Fragment {
 
     private void ValidateSignUpInputs(User user, String passwordVerification, View view , MainActivity main) {
         // Check email validation
-        if (user.getUser().isEmpty()) {
-            Toast.makeText(requireContext(), "Make sure the user is not empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         if (!EmailValidation(user.getEmail())) {
             Toast.makeText(requireContext(), "Invalid email format. Please enter a valid email.", Toast.LENGTH_SHORT).show();
             return ;

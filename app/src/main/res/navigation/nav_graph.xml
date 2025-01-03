@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homepage">
+    app:startDestination="@id/userinfo">
 
     <fragment
         android:id="@+id/register"
@@ -36,5 +36,25 @@
         android:id="@+id/homepage"
         android:name="com.example.meet_fit.fragmetns.homepage"
         android:label="fragment_homepage"
-        tools:layout="@layout/fragment_homepage" />
+        tools:layout="@layout/fragment_homepage" >
+        <action
+            android:id="@+id/action_homepage_to_login"
+            app:destination="@id/login" />
+        <action
+            android:id="@+id/action_homepage_to_myProfile2"
+            app:destination="@id/myProfile2" />
+        <action
+            android:id="@+id/action_homepage_to_updateAuthentication2"
+            app:destination="@id/updateAuthentication2" />
+    </fragment>
+    <fragment
+        android:id="@+id/myProfile2"
+        android:name="com.example.meet_fit.fragmetns.myProfile"
+        android:label="fragment_my_profile"
+        tools:layout="@layout/fragment_my_profile" />
+    <fragment
+        android:id="@+id/updateAuthentication2"
+        android:name="com.example.meet_fit.fragmetns.updateAuthentication"
+        android:label="fragment_update_authentication"
+        tools:layout="@layout/fragment_update_authentication" />
 </navigation>

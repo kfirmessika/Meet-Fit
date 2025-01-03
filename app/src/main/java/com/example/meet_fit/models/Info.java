@@ -3,6 +3,7 @@ package com.example.meet_fit.models;
 import java.util.List;
 
 public class Info {
+    private String userName;
     private List<String>activities;
     private String age ;
     private String fitLevel;
@@ -12,7 +13,9 @@ public class Info {
     private String photo;
 
 
-    public Info(List<String> activities, String age, String fitLevel, String aboutMe, String location, String phoneNumber, String photo) {
+    public Info(String userName, List<String> activities, String age, String fitLevel,
+                String aboutMe, String location, String phoneNumber, String photo) {
+        this.userName = userName;
         this.activities = activities;
         this.age = age;
         this.fitLevel = fitLevel;
@@ -29,6 +32,14 @@ public class Info {
         this.aboutMe = aboutMe;
         this.location = location;
         this.photo = photo;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPhoto() {

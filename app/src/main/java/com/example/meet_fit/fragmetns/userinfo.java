@@ -1,35 +1,50 @@
 package com.example.meet_fit.fragmetns;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.meet_fit.R;
 import com.example.meet_fit.activities.MainActivity;
 import com.example.meet_fit.models.Info;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +55,7 @@ public class userinfo extends Fragment {
 
     private ImageView imgGallery;
     private Button btnGallery;
+    private String fetchedCityName = null;
 
     private final ActivityResultLauncher<Intent> pickImageLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -106,30 +122,65 @@ public class userinfo extends Fragment {
         // Set click listener on the button
         btnGallery.setOnClickListener(view -> openGallery());
 
+        Spinner spLocation = rootView.findViewById(R.id.etLocation);
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.location,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spLocation.setAdapter(adapter);
+
+        // Handle selection of "My Location"
+        spLocation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String selectedOption = parent.getItemAtPosition(position).toString();
+                if ("My Location".equals(selectedOption)) {
+                    fetchUserLocation();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No action needed
+            }
+        });
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity main = (MainActivity) getActivity();
+                String userName = ((TextView)rootView.findViewById(R.id.etUsername)).getText().toString();
                 String age = ((Spinner)rootView.findViewById(R.id.spAge)).getSelectedItem().toString();
                 String fitLevel = ((Spinner)rootView.findViewById(R.id.spFitnessLevel)).getSelectedItem().toString();
                 String aboutMe = ((EditText)rootView.findViewById(R.id.etAboutMe)).getText().toString();
-                String location = ((Spinner)rootView.findViewById(R.id.etLocation)).getSelectedItem().toString();
+//                String location = ((Spinner)rootView.findViewById(R.id.etLocation)).getSelectedItem().toString();
+                String location =spLocation.getSelectedItem().toString();
                 List<String> activities = getSelectedActivities(rootView);
                 String digits = ((Spinner)rootView.findViewById(R.id.spPhonePrefix)).getSelectedItem().toString();
                 String number = ((EditText)rootView.findViewById(R.id.etPhoneNumber)).getText().toString();
                 String phoneNumber = digits.concat(number);
                 ImageView photo = rootView.findViewById(R.id.ivProfilePicture);
 
+                if ("My Location".equals(location)) {
+                    // Use the fetched city name instead
+                    location = fetchedCityName; // fetchedCityName is from getCityNameFromCoordinates
+                }
+
                 String image = imageViewToBase64(photo);
 
                 assert main != null;
-                Info userInfo = new Info( activities,  age,  fitLevel, aboutMe,  location,  phoneNumber,  image);
+                Info userInfo = new Info( userName,  activities, age,  fitLevel,
+                         aboutMe,  location,  phoneNumber, image);
                 validateInputs( userInfo, main,rootView);
 
             }
         });
+
+
         return rootView;
     }
 
@@ -229,6 +280,11 @@ public class userinfo extends Fragment {
     }
 
     private String imageViewToBase64(ImageView imageView) {
+        if (imageView.getDrawable() == null) {
+            // Handle the null case (e.g., log it, return a default value, or show an error)
+            Log.e("ImageViewError", "Drawable is null. Cannot convert to Base64.");
+            return null;
+        }
         // Step 1: Get the Bitmap from the ImageView
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
@@ -241,16 +297,65 @@ public class userinfo extends Fragment {
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    private void base64ToImageView(String base64String, ImageView imageView) {
-        // Step 1: Decode the Base64 String into a byte array
-        byte[] imageBytes = Base64.decode(base64String, Base64.DEFAULT);
+    private void fetchUserLocation() {
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
-        // Step 2: Convert the byte array into a Bitmap
-        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        // Check for location permissions
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        // Step 3: Set the Bitmap to the ImageView
-        imageView.setImageBitmap(decodedBitmap);
+            // Request permissions
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            return;
+        }
+
+        // Get the last known location
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                getCityNameFromCoordinates(latitude, longitude);
+
+            } else {
+                Toast.makeText(getContext(), "Unable to fetch location. Try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+    private void getCityNameFromCoordinates(double latitude, double longitude) {
+        String apiKey = "AIzaSyDDMyJshO_uQ04CVRqs6NcGY6uV_L4chcQ"; // Replace with your API key
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&key=" + apiKey;
+
+        new Thread(() -> {
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url(url).build();
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+
+                JSONObject jsonObject = new JSONObject(responseBody);
+                JSONArray results = jsonObject.getJSONArray("results");
+
+                if (results.length() > 0) {
+                    JSONObject firstResult = results.getJSONObject(0);
+                    String cityName = firstResult.getString("formatted_address");
+                    fetchedCityName = cityName;
+
+                    // Update UI with the city name
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Your location: " + cityName, Toast.LENGTH_LONG).show();
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Failed to fetch location name", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }).start();
+    }
+
 }
 
 

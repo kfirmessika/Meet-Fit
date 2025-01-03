@@ -85,9 +85,6 @@ public class login extends Fragment {
                 String password = ((EditText)rootView.findViewById(R.id.etPasswordSignIn)).getText().toString();
                validateEmailAndPassword(email,password,main,rootView);
 
-
-
-
             }
         });
 

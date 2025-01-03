@@ -35,8 +35,8 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="About Me"
-                    android:textSize="28sp"
+                    android:text="Name"
+                    android:textSize="32sp"
                     android:textStyle="bold"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
@@ -45,14 +45,14 @@
 
                 <!-- Profile Picture + Upload Button -->
                 <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_gravity="center">
 
                     <!-- Circular Background -->
                     <View
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/bg_profile_picture"/>
 
                     <ImageView
@@ -60,7 +60,7 @@
                         android:layout_width="110dp"
                         android:layout_height="110dp"
                         android:layout_gravity="center"
-                        android:scaleType="fitXY"
+                        android:scaleType="centerCrop"
                         android:contentDescription="Profile Picture"
                         android:elevation="4dp"/>
                 </FrameLayout>
@@ -81,29 +81,7 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="User Name"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp"
-                    android:textColor="@color/white"
-                    android:gravity="center"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="24dp">
-                    <EditText
-                        android:id="@+id/etUsername"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Enter Username Here"
-                        android:background="@drawable/rounded_edittext"
-                        android:padding="12dp" />
-                </LinearLayout>
+
                 <!-- Phone Number Title -->
                 <TextView
                     android:layout_width="match_parent"
@@ -114,7 +92,6 @@
                     android:layout_marginBottom="8dp"
                     android:textColor="@color/white"
                     android:gravity="center"/>
-
 
 
                 <!-- Phone Number Input (Spinner + EditText) -->
@@ -194,7 +171,7 @@
                         android:layout_weight="1"
                         android:text="Gym"
                         android:textStyle="bold"
-                        android:buttonTint="@color/checkbox_color2"
+                        android:buttonTint="@color/checkbox_color"
                         android:textColor="@color/white"
                         android:textSize="16dp"/>
 
@@ -206,19 +183,19 @@
                         android:text="Biking"
                         android:textStyle="bold"
                         android:textColor="@color/white"
-                        android:buttonTint="@color/checkbox_color2"
+                        android:buttonTint="@color/checkbox_color"
                         android:textSize="16dp"/>
 
                     <CheckBox
                         android:id="@+id/cbHiking"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:buttonTint="@color/checkbox_color2"
                         android:text="Hiking"
+                        android:buttonTint="@color/checkbox_color"
+                        android:textStyle="bold"
                         android:textColor="@color/white"
-                        android:textSize="16dp"
-                        android:textStyle="bold" />
+                        android:textSize="16dp"/>
                 </LinearLayout>
 
                 <!-- Row 2 of CheckBoxes -->
@@ -234,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Running"
-                        android:buttonTint="@color/checkbox_color2"
+                        android:buttonTint="@color/checkbox_color"
                         android:textStyle="bold"
                         android:textColor="@color/white"
                         android:textSize="16dp"/>
@@ -245,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Swimming"
-                        android:buttonTint="@color/checkbox_color2"
+                        android:buttonTint="@color/checkbox_color"
                         android:textStyle="bold"
                         android:textColor="@color/white"
                         android:textSize="16dp"/>
@@ -256,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Other"
-                        android:buttonTint="@color/checkbox_color2"
+                        android:buttonTint="@color/checkbox_color"
                         android:textStyle="bold"
                         android:textColor="@color/white"
                         android:textSize="16dp"/>
@@ -267,16 +244,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center">
-                <!-- Fitness Level -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="How do you consider your fitness level?"
-                    android:textSize="18sp"
-                    android:layout_marginBottom="8dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:gravity="center"/>
+                    <!-- Fitness Level -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="How do you consider your fitness level?"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="8dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:gravity="center"/>
                 </LinearLayout>
 
                 <Spinner
