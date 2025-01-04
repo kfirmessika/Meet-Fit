@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link register#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class register extends Fragment {
@@ -28,42 +27,23 @@ public class register extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
 
     public register() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment register.
-     */
+
     // TODO: Rename and change types and number of parameters
-    public static register newInstance(String param1, String param2) {
-        register fragment = new register();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -72,22 +52,19 @@ public class register extends Fragment {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_register, container, false);
         Button buttonContinue = rootview.findViewById(R.id.btnContinue);
-        buttonContinue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity main = (MainActivity) getActivity();
-                String email = ((EditText)rootview.findViewById(R.id.etEmail)).getText().toString();
-                String password = ((EditText)rootview.findViewById(R.id.etPassword)).getText().toString();
-                String passwordVerification = ((EditText)rootview.findViewById(R.id.etConfirmPassword)).getText().toString();
-                assert main != null;
-                User user = new User(email, password);
-                ValidateSignUpInputs( user ,passwordVerification, rootview, main);
+        buttonContinue.setOnClickListener(view -> {
+            MainActivity main = (MainActivity) getActivity();
+            String email = ((EditText)rootview.findViewById(R.id.etEmail)).getText().toString();
+            String password = ((EditText)rootview.findViewById(R.id.etPassword)).getText().toString();
+            String passwordVerification = ((EditText)rootview.findViewById(R.id.etConfirmPassword)).getText().toString();
+            assert main != null;
+            User user = new User(email, password);
+            ValidateSignUpInputs( user ,passwordVerification, rootview, main);
 
 
 
 
 
-            }
         });
 
         return rootview;
@@ -155,7 +132,7 @@ public class register extends Fragment {
                 // Handle failure case if needed
                 Toast.makeText(getActivity(), "Failed to save info. Please try again.", Toast.LENGTH_SHORT).show();
             }
-        }); // Call the registrati/ Call the registration method
+        });
 
     }
 }

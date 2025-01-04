@@ -1,6 +1,7 @@
 package com.example.meet_fit.fragmetns;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -42,19 +43,15 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link userinfo#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class userinfo extends Fragment {
 
     private ImageView imgGallery;
-    private Button btnGallery;
     private String fetchedCityName = null;
 
     private final ActivityResultLauncher<Intent> pickImageLauncher =
@@ -69,44 +66,21 @@ public class userinfo extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public userinfo() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment userinfo.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static userinfo newInstance(String param1, String param2) {
-        userinfo fragment = new userinfo();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
     
+    @SuppressLint("CutPasteId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -117,7 +91,7 @@ public class userinfo extends Fragment {
         Button buttonSubmit = rootView.findViewById(R.id.btnSubmit);
 
         imgGallery = rootView.findViewById(R.id.ivProfilePicture);
-        btnGallery = rootView.findViewById(R.id.upload_button);
+        Button btnGallery = rootView.findViewById(R.id.upload_button);
 
         // Set click listener on the button
         btnGallery.setOnClickListener(view -> openGallery());
@@ -125,7 +99,7 @@ public class userinfo extends Fragment {
         Spinner spLocation = rootView.findViewById(R.id.etLocation);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                getContext(),
+                requireContext(),
                 R.array.location,
                 android.R.layout.simple_spinner_item
         );
@@ -149,35 +123,32 @@ public class userinfo extends Fragment {
             }
         });
 
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity main = (MainActivity) getActivity();
-                String userName = ((TextView)rootView.findViewById(R.id.etUsername)).getText().toString();
-                String age = ((Spinner)rootView.findViewById(R.id.spAge)).getSelectedItem().toString();
-                String fitLevel = ((Spinner)rootView.findViewById(R.id.spFitnessLevel)).getSelectedItem().toString();
-                String aboutMe = ((EditText)rootView.findViewById(R.id.etAboutMe)).getText().toString();
+        buttonSubmit.setOnClickListener(view -> {
+            MainActivity main = (MainActivity) getActivity();
+            String userName = ((TextView)rootView.findViewById(R.id.etUsername)).getText().toString();
+            String age = ((Spinner)rootView.findViewById(R.id.spAge)).getSelectedItem().toString();
+            String fitLevel = ((Spinner)rootView.findViewById(R.id.spFitnessLevel)).getSelectedItem().toString();
+            String aboutMe = ((EditText)rootView.findViewById(R.id.etAboutMe)).getText().toString();
 //                String location = ((Spinner)rootView.findViewById(R.id.etLocation)).getSelectedItem().toString();
-                String location =spLocation.getSelectedItem().toString();
-                List<String> activities = getSelectedActivities(rootView);
-                String digits = ((Spinner)rootView.findViewById(R.id.spPhonePrefix)).getSelectedItem().toString();
-                String number = ((EditText)rootView.findViewById(R.id.etPhoneNumber)).getText().toString();
-                String phoneNumber = digits.concat(number);
-                ImageView photo = rootView.findViewById(R.id.ivProfilePicture);
+            String location =spLocation.getSelectedItem().toString();
+            List<String> activities = getSelectedActivities(rootView);
+            String digits = ((Spinner)rootView.findViewById(R.id.spPhonePrefix)).getSelectedItem().toString();
+            String number = ((EditText)rootView.findViewById(R.id.etPhoneNumber)).getText().toString();
+            String phoneNumber = digits.concat(number);
+            ImageView photo = rootView.findViewById(R.id.ivProfilePicture);
 
-                if ("My Location".equals(location)) {
-                    // Use the fetched city name instead
-                    location = fetchedCityName; // fetchedCityName is from getCityNameFromCoordinates
-                }
-
-                String image = imageViewToBase64(photo);
-
-                assert main != null;
-                Info userInfo = new Info( userName,  activities, age,  fitLevel,
-                         aboutMe,  location,  phoneNumber, image);
-                validateInputs( userInfo, main,rootView);
-
+            if ("My Location".equals(location)) {
+                // Use the fetched city name instead
+                location = fetchedCityName; // fetchedCityName is from getCityNameFromCoordinates
             }
+
+            String image = imageViewToBase64(photo);
+
+            assert main != null;
+            Info userInfo = new Info( userName,  activities, age,  fitLevel,
+                     aboutMe,  location,  phoneNumber, image);
+            validateUserName( userInfo, main,rootView);
+
         });
 
 
@@ -218,7 +189,28 @@ public class userinfo extends Fragment {
         return activities;
     }
 
+    private void validateUserName(Info userInfo, MainActivity main, View view)
+    {
+        if (userInfo.getUserName() == null || userInfo.getUserName().isEmpty()) {
+            Toast.makeText(getActivity(), "Please enter a username.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if the username exists
+        main.checkIfUsernameExists(userInfo.getUserName(), isExists -> {
+            if (isExists) {
+                // Username exists; show a message and stop further execution
+                Toast.makeText(getActivity(), "Username already exists.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Username does not exist; continue with other validations
+                validateInputs(userInfo, main, view);
+            }
+        });
+
+    }
     private void validateInputs(Info userInfo, MainActivity main, View view) {
+
+
             // Validate phone number
             if (userInfo.getPhoneNumber() == null || userInfo.getPhoneNumber().isEmpty()) {
                 Toast.makeText(getActivity(), "Please enter a phone number.", Toast.LENGTH_SHORT).show();
@@ -305,7 +297,7 @@ public class userinfo extends Fragment {
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             // Request permissions
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             return;
         }
 
@@ -332,6 +324,7 @@ public class userinfo extends Fragment {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(url).build();
                 Response response = client.newCall(request).execute();
+                assert response.body() != null;
                 String responseBody = response.body().string();
 
                 JSONObject jsonObject = new JSONObject(responseBody);
@@ -343,15 +336,12 @@ public class userinfo extends Fragment {
                     fetchedCityName = cityName;
 
                     // Update UI with the city name
-                    requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Your location: " + cityName, Toast.LENGTH_LONG).show();
-                    });
+                    requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Your location: " + cityName, Toast.LENGTH_LONG).show());
                 }
             } catch (Exception e) {
+                //noinspection CallToPrintStackTrace
                 e.printStackTrace();
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Failed to fetch location name", Toast.LENGTH_SHORT).show();
-                });
+                requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Failed to fetch location name", Toast.LENGTH_SHORT).show());
             }
         }).start();
     }

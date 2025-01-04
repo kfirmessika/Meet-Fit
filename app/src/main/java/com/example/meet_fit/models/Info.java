@@ -12,7 +12,6 @@ public class Info {
     private String phoneNumber;
     private String photo;
 
-
     public Info(String userName, List<String> activities, String age, String fitLevel,
                 String aboutMe, String location, String phoneNumber, String photo) {
         this.userName = userName;
@@ -60,8 +59,6 @@ public class Info {
 
     public Info() {
     }
-
-
 
     public List<String> getActivities() {
         return activities;

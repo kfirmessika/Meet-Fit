@@ -152,10 +152,4 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-
-    // Method to update the list and notify adapter
-    public void setFilteredList(List<Info> filteredList){
-        this.recycleModels = filteredList;
-        notifyDataSetChanged();
-    }
 }

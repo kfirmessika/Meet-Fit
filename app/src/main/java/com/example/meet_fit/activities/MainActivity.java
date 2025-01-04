@@ -40,12 +40,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     private String currentUserUid;
-    private String fetchUserName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
     public interface SaveInfoCallback {
         void onSaveComplete(boolean isSuccess);
-    }
-
-    public String getUserName()
-    {
-        return fetchUserName;
     }
 
     private  String getCurrentUserId() {
@@ -105,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
     {
         Navigation.findNavController(view).navigate(R.id.action_login_to_homepage);
     }
+
+    public void loginToInfo(View view)
+    {Navigation.findNavController(view).navigate(R.id.action_login_to_userinfo);}
     public void registerToUser(View view) {
         Navigation.findNavController(view).navigate(R.id.action_register_to_userinfo);
     }
@@ -231,11 +230,12 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null ) {
-                            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Logged in successfully!" , Toast.LENGTH_SHORT).show();
                             callback.onSaveComplete(true);
+
                         }
                     } else {
-                        Toast.makeText(this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Login failed: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                         callback.onSaveComplete(false);
                     }
                 });
@@ -513,37 +513,68 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateDatabase(String userId, User newUser) {
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(userId).child("user").setValue(newUser)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Database updated successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Failed to update database", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        saveData(newUser, userId,"user", isSuccess -> {
+            if (isSuccess) {
+                // Perform next actions on success
+                Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show();
+
+            } else {
+                // Handle failure case
+                Toast.makeText(this, "Failed to save data. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void getLoggedInUsername() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            // No user is logged in
-            return;
-        }
+    public void checkIfUsernameExists(String usernameToCheck, SaveInfoCallback callback) {
+        // Reference to the "info" node in Firebase
+        DatabaseReference infoRef = FirebaseDatabase.getInstance().getReference("users");
 
-        String uid = currentUser.getUid();
-        DatabaseReference userRef = FirebaseDatabase.getInstance()
-                .getReference("users")
-                .child(uid)
-                .child("username");
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Query to check if any user has the given username
+        infoRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    String fetchUserName = snapshot.getValue(String.class);
-
+                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                        String existingUsername = userSnapshot.child("info").child("userName").getValue(String.class);
+                        if (usernameToCheck.equals(existingUsername)) {
+                            // Username exists
+                            callback.onSaveComplete(true);
+                            return;
+                        }
+                    }
                 }
+                // Username does not exist
+                callback.onSaveComplete(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle errors (e.g., network issues or permission errors)
+
+            }
+        });
+    }
+
+    public void checkFullSignIn(SaveInfoCallback callback)
+    {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            // No user is logged in
+            callback.onSaveComplete(false);
+            return;
+        }
+
+        // Get the user's UID
+        String uid = currentUser.getUid();
+
+        // Reference the "info" node for the current user
+        DatabaseReference infoRef = FirebaseDatabase.getInstance().getReference("users").child(uid).child("info");
+
+        // Check if the "info" node exists
+        infoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onSaveComplete(snapshot.exists());
             }
 
             @Override

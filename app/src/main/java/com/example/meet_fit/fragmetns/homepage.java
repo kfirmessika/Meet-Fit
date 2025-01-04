@@ -1,18 +1,16 @@
 package com.example.meet_fit.fragmetns;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -24,7 +22,6 @@ import com.example.meet_fit.R;
 import com.example.meet_fit.activities.MainActivity;
 import com.example.meet_fit.adapters.RecyclerAdapter;
 import com.example.meet_fit.models.Info;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,34 +30,21 @@ public class homepage extends Fragment {
 
     private List<Info> infoList;
     private List<Info> originalList;
-    private List<String> selectedActivities = new ArrayList<>();
-    private List<String> selectedFitnessLevels = new ArrayList<>();
-
-
-
+    private final List<String> selectedActivities = new ArrayList<>();
+    private final List<String> selectedFitnessLevels = new ArrayList<>();
 
     private RecyclerAdapter recyclerAdapter;
-    private DatabaseReference databaseReference;
+
 
     public homepage() {
         // Required empty public constructor
     }
 
-    public static homepage newInstance(String param1, String param2) {
-        homepage fragment = new homepage();
-        Bundle args = new Bundle();
-        args.putString("param1", param1);
-        args.putString("param2", param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // Handle fragment arguments if needed
-        }
+
     }
 
     @Override
@@ -114,16 +98,6 @@ public class homepage extends Fragment {
         return rootview;
     }
 
-    private void showSettingsPopup(View anchor) {
-        PopupMenu popup = new PopupMenu(getContext(), anchor);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.settings_menu, popup.getMenu());
-
-
-
-        popup.show();
-    }
-
     // Function to show Filter popup menu
     private void showFilterDialog(){
         // Inflate the filter dialog layout
@@ -145,34 +119,29 @@ public class homepage extends Fragment {
         CheckBox cbBeginner = dialogView.findViewById(R.id.cbBeginner);
 
         // Create AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(dialogView)
                 .setTitle("Filter Options")
-                .setPositiveButton("Apply", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        // Collect selected filters
-                        if(selectedActivities!=null)
-                           selectedActivities.clear();
-                        if(selectedFitnessLevels!=null)
-                           selectedFitnessLevels.clear();
+                .setPositiveButton("Apply", (dialog, which) -> {
+                    // Collect selected filters
+                    selectedActivities.clear();
+                    selectedFitnessLevels.clear();
 
 
-                        if(cbRun.isChecked()) selectedActivities.add("Running");
-                        if(cbBike.isChecked()) selectedActivities.add("Biking");
-                        if(cbSwim.isChecked()) selectedActivities.add("Swimming");
-                        if(cbHiking.isChecked()) selectedActivities.add("Hiking");
-                        if(cbGym.isChecked()) selectedActivities.add("Gym");
-                        if(cbOther.isChecked()) selectedActivities.add("Other");
+                    if(cbRun.isChecked()) selectedActivities.add("Running");
+                    if(cbBike.isChecked()) selectedActivities.add("Biking");
+                    if(cbSwim.isChecked()) selectedActivities.add("Swimming");
+                    if(cbHiking.isChecked()) selectedActivities.add("Hiking");
+                    if(cbGym.isChecked()) selectedActivities.add("Gym");
+                    if(cbOther.isChecked()) selectedActivities.add("Other");
 
 
-                        if(cbPro.isChecked()) selectedFitnessLevels.add("Professional");
-                        if(cbGood.isChecked()) selectedFitnessLevels.add("Very Good");
-                        if(cbMid.isChecked()) selectedFitnessLevels.add("Mediocre");
-                        if(cbBeginner.isChecked()) selectedFitnessLevels.add("Beginner");
+                    if(cbPro.isChecked()) selectedFitnessLevels.add("Professional");
+                    if(cbGood.isChecked()) selectedFitnessLevels.add("Very Good");
+                    if(cbMid.isChecked()) selectedFitnessLevels.add("Mediocre");
+                    if(cbBeginner.isChecked()) selectedFitnessLevels.add("Beginner");
 
-                        applyFilters(selectedActivities, selectedFitnessLevels);
-                    }
+                    applyFilters(selectedActivities, selectedFitnessLevels);
                 })
                 .setNegativeButton("Cancel", null);
 
@@ -180,6 +149,7 @@ public class homepage extends Fragment {
     }
 
     // Function to apply filters based on selected activities and fitness levels
+    @SuppressLint("NotifyDataSetChanged")
     private void applyFilters(List<String> selectedActivities, List<String> selectedFitnessLevels) {
         List<Info> filteredList = new ArrayList<>();
 
@@ -243,12 +213,9 @@ public class homepage extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.settings_diaglog, null);
 
-        LayoutInflater inflater2 = LayoutInflater.from(getContext());
-        View rootView = inflater2.inflate(R.layout.fragment_homepage, null);
-
 
         // Create the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(dialogView);
 
         AlertDialog dialog = builder.create();
@@ -283,9 +250,5 @@ public class homepage extends Fragment {
 
 
     }
-
-
-
-
 
 }

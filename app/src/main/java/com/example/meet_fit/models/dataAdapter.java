@@ -17,9 +17,6 @@ import java.io.ByteArrayOutputStream;
 
 public class dataAdapter {
 
-
-
-
     public static void validateInputs(Info userInfo, MainActivity main, View view) {
         // Validate phone number
         if (userInfo.getPhoneNumber() == null || userInfo.getPhoneNumber().isEmpty()) {
