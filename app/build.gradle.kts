@@ -33,6 +33,8 @@ android {
 }
 
 dependencies {
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
     implementation (libs.okhttp)
     implementation (libs.play.services.location)
     implementation(libs.appcompat)

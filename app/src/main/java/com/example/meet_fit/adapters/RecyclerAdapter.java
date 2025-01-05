@@ -1,9 +1,6 @@
 package com.example.meet_fit.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meet_fit.R;
 import com.example.meet_fit.models.Info;
+import com.example.meet_fit.models.dataAdapter;
 
 import java.util.List;
 
@@ -72,7 +70,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
 
         // Decode and set Base64 image
-        setBase64Image(info.getPhoto(), holder.photo);
+
+        dataAdapter.base64ToImageView(info.getPhoto(), holder.photo);
 
         if (info.getPhoneNumber() == null || info.getPhoneNumber().isEmpty()) {
             holder.btnContactMe.setEnabled(false); // Disable the button
@@ -101,22 +100,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     // Optionally provide a way to update the data set
 
 
-    public void setBase64Image(String base64Image, ImageView imageView) {
-        if (base64Image != null && !base64Image.isEmpty()) {
-            try {
-                byte[] decodedBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-                imageView.setImageBitmap(bitmap);
-            } catch (IllegalArgumentException e) {
-                // Handle invalid Base64 string
-                e.printStackTrace();
-                imageView.setImageResource(R.drawable.meet_fit_logo);
-            }
-        } else {
-            // If empty or null, set a placeholder
-            imageView.setImageResource(R.drawable.meet_fit_logo);
-        }
-    }
+
 
     // ViewHolder class
     public static class ViewHolder extends RecyclerView.ViewHolder {

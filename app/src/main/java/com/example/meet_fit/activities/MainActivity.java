@@ -1,12 +1,12 @@
 package com.example.meet_fit.activities;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +28,7 @@ import com.example.meet_fit.R;
 import com.example.meet_fit.adapters.RecyclerAdapter;
 import com.example.meet_fit.models.Info;
 import com.example.meet_fit.models.User;
+import com.example.meet_fit.models.dataAdapter;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -251,9 +252,13 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                assert firebaseUser != null;
+                String uid = firebaseUser.getUid();
                 // Loop through all UIDs in the "users" node
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    if(userSnapshot.getKey()!= null && userSnapshot.getKey().equals(uid))
+                    {continue;}
                     // Access the "info" node for each user
                     DataSnapshot infoSnapshot = userSnapshot.child("info");
 
@@ -302,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void fetchAndPopulateUserData(View view) {
+    public void fetchAndPopulateUserData(View view, ArrayAdapter<String> adapter ) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -326,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
                     // Now call the method in the fragment
                     Info info = snapshot.getValue(Info.class);
                     assert info != null;
-                    populateUI(info,view);
+                    populateUI(info,view,adapter);
 
                 }
             }
@@ -340,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void populateUI(Info info , View rootView) {
+    private void populateUI(Info info , View rootView, ArrayAdapter<String> adapter ) {
          ImageView ivProfilePicture;
          Spinner spPhonePrefix;
          EditText etPhoneNumber;
@@ -369,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
         name = rootView.findViewById(R.id.tvTitle);
 
 
-        base64ToImageView(info.getPhoto(), ivProfilePicture);
+        dataAdapter.base64ToImageView(info.getPhoto(), ivProfilePicture);
 
         String fullPhoneNumber = info.getPhoneNumber();
         if (fullPhoneNumber != null && fullPhoneNumber.length() >= 3) {
@@ -396,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
             cbBiking.setChecked(activities.contains("Biking"));
             cbHiking.setChecked(activities.contains("Hiking"));
             cbRunning.setChecked(activities.contains("Running"));
-            cbSwimming.setChecked(activities.contains("Swimming"));
+            cbSwimming.setChecked(activities.contains("Swim"));
             cbOther.setChecked(activities.contains("Other"));
         }
 
@@ -404,7 +409,14 @@ public class MainActivity extends AppCompatActivity {
         setSpinnerToValue(spFitnessLevel, info.getFitLevel());
 
         // 6. Location
-        setSpinnerToValue(etLocation, info.getLocation());
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            String desiredOption = info.getLocation();
+            int position = adapter.getPosition(desiredOption);
+            if (position >= 0) {
+                etLocation.setSelection(position);
+            }
+        }, 1000);
+//        setSpinnerToValue(etLocation, info.getLocation());
 
         // 7. About Me
         etAboutMe.setText(info.getAboutMe());
@@ -424,22 +436,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-    }
-
-    private void base64ToImageView(String base64String, ImageView imageView) {
-        if( base64String == null || base64String.isEmpty() )
-        {
-            imageView.setImageDrawable(null);
-            return;
-        }
-        // Step 1: Decode the Base64 String into a byte array
-        byte[] imageBytes = Base64.decode(base64String, Base64.DEFAULT);
-
-        // Step 2: Convert the byte array into a Bitmap
-        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-
-        // Step 3: Set the Bitmap to the ImageView
-        imageView.setImageBitmap(decodedBitmap);
     }
 
     public void updateCredentials(User newUser, User oldUser) {

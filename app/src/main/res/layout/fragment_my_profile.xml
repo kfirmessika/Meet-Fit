@@ -51,14 +51,14 @@
 
                     <!-- Circular Background -->
                     <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
                         android:background="@drawable/bg_profile_picture"/>
 
                     <ImageView
                         android:id="@+id/ivProfilePicture"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
                         android:layout_gravity="center"
                         android:scaleType="centerCrop"
                         android:contentDescription="Profile Picture"

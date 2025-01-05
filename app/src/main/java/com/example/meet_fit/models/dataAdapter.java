@@ -2,9 +2,14 @@ package com.example.meet_fit.models;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -79,6 +84,11 @@ public class dataAdapter {
     }
 
     public static String imageViewToBase64(ImageView imageView) {
+        if (imageView.getDrawable() == null) {
+            // Handle the null case (e.g., log it, return a default value, or show an error)
+            Log.e("ImageViewError", "Drawable is null. Cannot convert to Base64.");
+            return null;
+        }
         // Step 1: Get the Bitmap from the ImageView
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
@@ -89,5 +99,39 @@ public class dataAdapter {
 
         // Step 3: Encode the Byte Array to Base64 String
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    public static Bitmap cropToCircle(Bitmap source) {
+        int size = Math.min(source.getWidth(), source.getHeight());
+        Bitmap result = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(result);
+        Paint paint = new Paint();
+        paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
+        paint.setAntiAlias(true);
+
+        float radius = size / 2f;
+        canvas.drawCircle(radius, radius, radius, paint);
+
+        return result;
+    }
+
+    public static void base64ToImageView(String base64String, ImageView imageView) {
+        if( base64String == null || base64String.isEmpty() )
+        {
+            imageView.setImageDrawable(null);
+            return;
+        }
+        // Step 1: Decode the Base64 String into a byte array
+        byte[] imageBytes = Base64.decode(base64String, Base64.DEFAULT);
+
+        // Step 2: Convert the byte array into a Bitmap
+        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+        // Step 3: Crop the Bitmap to a Circle
+        Bitmap circularBitmap = dataAdapter.cropToCircle(decodedBitmap);
+
+        // Step 4: Set the Circular Bitmap to the ImageView
+        imageView.setImageBitmap(circularBitmap);
     }
 }

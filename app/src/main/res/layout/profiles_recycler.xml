@@ -32,14 +32,14 @@
 
                 <!-- Optional background circle -->
                 <View
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:background="@drawable/bg_profile_picture"/>
 
                 <ImageView
                     android:id="@+id/ivProfilePicture"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     android:src="@drawable/meet_fit_logo"/>

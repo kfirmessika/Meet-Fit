@@ -130,7 +130,7 @@ public class homepage extends Fragment {
 
                     if(cbRun.isChecked()) selectedActivities.add("Running");
                     if(cbBike.isChecked()) selectedActivities.add("Biking");
-                    if(cbSwim.isChecked()) selectedActivities.add("Swimming");
+                    if(cbSwim.isChecked()) selectedActivities.add("Swim");
                     if(cbHiking.isChecked()) selectedActivities.add("Hiking");
                     if(cbGym.isChecked()) selectedActivities.add("Gym");
                     if(cbOther.isChecked()) selectedActivities.add("Other");
@@ -195,7 +195,7 @@ public class homepage extends Fragment {
         // Preselect activity checkboxes
         if (selectedActivities.contains("Running")) cbRun.setChecked(true);
         if (selectedActivities.contains("Biking")) cbBike.setChecked(true);
-        if (selectedActivities.contains("Swimming")) cbSwim.setChecked(true);
+        if (selectedActivities.contains("Swim")) cbSwim.setChecked(true);
         if (selectedActivities.contains("Hiking")) cbHiking.setChecked(true);
         if (selectedActivities.contains("Gym")) cbGym.setChecked(true);
         if (selectedActivities.contains("Other")) cbOther.setChecked(true);
