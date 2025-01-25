@@ -23,9 +23,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meet_fit.R;
+import com.example.meet_fit.adapters.EventsAdapter;
 import com.example.meet_fit.adapters.RecyclerAdapter;
+import com.example.meet_fit.models.Event;
 import com.example.meet_fit.models.Info;
 import com.example.meet_fit.models.User;
 import com.example.meet_fit.models.dataAdapter;
@@ -39,14 +42,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     private String currentUserUid;
+
+    private RecyclerView rv;
+    private EventsAdapter eventsAdapter;
+    private ArrayList<Event> allEventsList = new ArrayList<>();
+
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
 
 
     @Override
@@ -60,16 +75,16 @@ public class MainActivity extends AppCompatActivity {
             return insets;
 
 
-
-
-
-
         });
 
     }
 
     public interface SaveInfoCallback {
         void onSaveComplete(boolean isSuccess);
+    }
+
+    public interface OnEventsFetchedListener {
+        void onEventsFetched(ArrayList<Event> events);
     }
 
     private  String getCurrentUserId() {
@@ -86,6 +101,17 @@ public class MainActivity extends AppCompatActivity {
         navController.navigate(R.id.action_homepage_to_myProfile2);
     }
 
+    public void homepageToCreateEvent()
+    {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.navigate(R.id.action_homepage_to_addEvent);
+    }
+
+    public void homepageToEvents()
+    {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.navigate(R.id.action_homepage_to_events);
+    }
     public void homepageToUpdateAuthentication()
     {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -579,4 +605,140 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public void saveEventToFirebase(Event event) {
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "No user logged in!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference usersRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("events");
+
+        // Create a map to store each field manually
+        // so that `date` is saved as a long, and `time` as a String.
+        long dateTimestamp = 0L;
+        if (event.getDate() != null) {
+            dateTimestamp = event.getDate().getTime();
+        }
+
+        String timeString = null;
+        if (event.getTime() != null) {
+            // Convert LocalTime to a String (e.g., "14:30")
+            timeString = event.getTime().toString();
+            // or use a formatter if you want a specific pattern
+            // timeString = event.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        }
+
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("activity",   event.getActivity());
+        eventMap.put("fitLevel",   event.getFitLevel());
+        eventMap.put("aboutEvent", event.getAboutEvent());
+        eventMap.put("location",   event.getLocation());
+        eventMap.put("date",       dateTimestamp); // Stored as a number
+        eventMap.put("time",       timeString);    // Stored as a string
+
+        // Determine the next event key (e.g., event1, event2, ...)
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long count = snapshot.getChildrenCount();
+                String eventKey = "event" + (count + 1);
+
+                // Save the map instead of the raw Event object
+                usersRef.child(eventKey).setValue(eventMap)
+                        .addOnSuccessListener(unused -> {
+                            Toast.makeText(MainActivity.this,
+                                    "Event saved successfully!",
+                                    Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(MainActivity.this,
+                                    "Failed to save event: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this,
+                        "Database error: " + error.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void fetchAllEvents(final OnEventsFetchedListener listener) {
+
+
+        DatabaseReference usersRef =  FirebaseDatabase.getInstance().getReference().child("users");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Event> allEventsList = new ArrayList<>();
+
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    // Grab 'events' node for this user
+                    DataSnapshot eventsSnapshot = userSnapshot.child("events");
+                    if (eventsSnapshot.exists()) {
+                        for (DataSnapshot eventChild : eventsSnapshot.getChildren()) {
+                            Event event = parseEventSnapshot(eventChild);
+                            if (event != null) {
+                                allEventsList.add(event);
+                            }
+                        }
+                    }
+                }
+
+                // Once done, pass the array back via the listener
+                if (listener != null) {
+                    listener.onEventsFetched(allEventsList);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this,
+                        "Failed to fetch events: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+
+                if (listener != null) {
+                    // Return an empty list or handle error
+                    listener.onEventsFetched(new ArrayList<>());
+                }
+            }
+        });
+    }
+
+    /**
+     * Convert DataSnapshot -> Event
+     */
+    private Event parseEventSnapshot(DataSnapshot snapshot) {
+        try {
+            String aboutEvent = snapshot.child("aboutEvent").getValue(String.class);
+            String activity   = snapshot.child("activity").getValue(String.class);
+            String fitLevel   = snapshot.child("fitLevel").getValue(String.class);
+            String location   = snapshot.child("location").getValue(String.class);
+
+            // date stored as a Long (timestamp)
+            Long dateLong = snapshot.child("date").getValue(Long.class);
+            Date date = (dateLong != null) ? new Date(dateLong) : null;
+
+            // time stored as a string (e.g. "14:30:00")
+            String timeStr = snapshot.child("time").getValue(String.class);
+            LocalTime localTime = null;
+            if (timeStr != null && !timeStr.isEmpty()) {
+                localTime = LocalTime.parse(timeStr, timeFormatter);
+            }
+
+            return new Event(activity, localTime, fitLevel, aboutEvent, location, date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

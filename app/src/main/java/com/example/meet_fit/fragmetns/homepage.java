@@ -53,13 +53,24 @@ public class homepage extends Fragment {
         // Inflate the main layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_homepage, container, false);
 
+        MainActivity main = (MainActivity) getActivity();
+
         // Initialize Buttons
         Button btnSettings = rootview.findViewById(R.id.btnSettings);
         Button btnFilter = rootview.findViewById(R.id.btnFilter);
+        Button btnEvents = rootview.findViewById(R.id.btnEvents);
 
+        btnEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                assert main != null;
+                main.homepageToEvents();
+            }
+        });
         // Set click listeners for Buttons
         btnSettings.setOnClickListener(v -> showSettingsDialog());
         btnFilter.setOnClickListener(view -> showFilterDialog());
+
 
         // Initialize RecyclerView
         RecyclerView recyclerView = rootview.findViewById(R.id.rv);
@@ -90,7 +101,7 @@ public class homepage extends Fragment {
 
 
         // Fetch data from Firebase
-        MainActivity main = (MainActivity) getActivity();
+
         if (main != null) {
             main.fetchDataFromFirebase(recyclerAdapter, infoList, originalList);
         }
@@ -225,9 +236,17 @@ public class homepage extends Fragment {
         Button btnMyProfile = dialogView.findViewById(R.id.btn_my_profile);
         Button btnChangeSignInData = dialogView.findViewById(R.id.btn_change_signin_data);
         Button btnLogOut = dialogView.findViewById(R.id.btn_log_out);
+        Button btnEvent = dialogView.findViewById(R.id.btn_add_event);
+
 
         MainActivity main = (MainActivity) getActivity();
         assert main != null;
+
+        btnEvent.setOnClickListener(v -> {
+            // Handle My Profile click
+            main.homepageToCreateEvent();
+            dialog.cancel();
+        });
 
         // Set button actions
         btnMyProfile.setOnClickListener(v -> {

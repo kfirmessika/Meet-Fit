@@ -30,6 +30,18 @@
             android:backgroundTint="@color/button_color"
             android:layout_marginBottom="8dp"/>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add_event"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Event"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/button_color"
+            android:layout_marginBottom="8dp"/>
+
         <!-- Change Sign in Data Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_change_signin_data"

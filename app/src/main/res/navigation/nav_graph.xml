@@ -49,6 +49,12 @@
         <action
             android:id="@+id/action_homepage_to_updateAuthentication2"
             app:destination="@id/updateAuthentication2" />
+        <action
+            android:id="@+id/action_homepage_to_addEvent"
+            app:destination="@id/addEvent" />
+        <action
+            android:id="@+id/action_homepage_to_events"
+            app:destination="@id/events" />
     </fragment>
     <fragment
         android:id="@+id/myProfile2"
@@ -60,4 +66,12 @@
         android:name="com.example.meet_fit.fragmetns.updateAuthentication"
         android:label="fragment_update_authentication"
         tools:layout="@layout/fragment_update_authentication" />
+    <fragment
+        android:id="@+id/addEvent"
+        android:name="com.example.meet_fit.fragmetns.addEvent"
+        android:label="addEvent" />
+    <fragment
+        android:id="@+id/events"
+        android:name="com.example.meet_fit.fragmetns.Events"
+        android:label="Events" />
 </navigation>

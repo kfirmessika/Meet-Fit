@@ -31,6 +31,12 @@
             android:layout_height="48dp"
             android:layout_gravity="start"
             android:background="@drawable/settings" />
+        <Button
+            android:id="@+id/btnEvents"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start"
+            android:background="@drawable/events"/>
 
         <!-- Spacer to push buttons apart -->
         <View
