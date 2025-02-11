@@ -26,13 +26,19 @@ import com.example.meet_fit.activities.MainActivity;
 import com.example.meet_fit.models.Event;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +56,8 @@ public class addEvent extends Fragment {
     private EditText etDate, etTime, etAboutMe;
     private Button btnSubmit;
     private String fetchedCityName;
+    private List<String> participants = new ArrayList<>();
+    private String userName;
     // SimpleDateFormat for parsing the date string from EditText
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     // DateTimeFormatter for parsing the time string
@@ -165,8 +173,7 @@ public class addEvent extends Fragment {
         String activity = spActivity.getSelectedItem().toString().trim();
         String fitLevel = spFitnessLevel.getSelectedItem().toString().trim();
         String location = spLocation.getSelectedItem().toString().trim();
-        if(location.equals("My Location"))
-        {
+        if (location.equals("My Location")) {
             location = fetchedCityName;
         }
         String dateStr = etDate.getText().toString().trim();
@@ -217,21 +224,62 @@ public class addEvent extends Fragment {
             return;
         }
 
-        // Construct the Event object
-        Event newEvent = new Event(
-                activity,
-                timeObject,
-                fitLevel,
-                aboutEvent,
-                location,
-                dateObject
-        );
+        // *** Start of Added Code: Check if the selected date and time are not in the past ***
+        // Convert Date to LocalDate
+        Instant instant = dateObject.toInstant();
+        LocalDate eventDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
 
+        // Combine LocalDate and LocalTime to LocalDateTime
+        LocalDateTime eventDateTime = LocalDateTime.of(eventDate, timeObject);
+
+        // Get current LocalDateTime
+        LocalDateTime now = LocalDateTime.now();
+
+        // Compare eventDateTime with now
+        if (eventDateTime.isBefore(now)) {
+            showError("The selected date and time are in the past. Please choose a future date and time.");
+            return;
+        }
+        // *** End of Added Code ***
+
+
+
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        String finalLocation = location;
+        mainActivity.getUsernameOfCurrentUser(username -> {
+            if (username == null) {
+                Toast.makeText(getContext(), "Failed to get username or user not logged in.", Toast.LENGTH_SHORT).show();
+            } else {
+                // 1) We have the username, so add it to the list
+
+                participants.add(username);
+
+                // 2) Now participants.get(0) is safe because the list has the user
+                DatabaseReference eventsRef = FirebaseDatabase.getInstance().getReference("events");
+                String eventId = eventsRef.push().getKey();
+
+                // 3) Construct the Event inside the callback
+                Event newEvent = new Event(
+                        activity,
+                        timeObject,
+                        fitLevel,
+                        aboutEvent,
+                        finalLocation,
+                        dateObject,
+                        participants,     // the entire list
+                        participants.get(0), // index 0 is the user we just added
+                        eventId
+                );
+
+                // 4) Save the Event now that it's fully populated
+                mainActivity.saveEventToFirebase(newEvent);
+            }
+        });
         // Call the MainActivity method to save to database
         // Make sure your activity is actually MainActivity or whichever holds the save method
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.saveEventToFirebase(newEvent);
+
     }
+
 
     /**
      * Show an error message (Toast or Snackbar).

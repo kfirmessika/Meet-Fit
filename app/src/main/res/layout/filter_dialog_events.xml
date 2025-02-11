@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/filterScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient2"
+    android:padding="15dp">
+
+    <!-- Root container for everything -->
+    <LinearLayout
+        android:id="@+id/filterLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Card for Activities -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/title_color" >
+
+                <TextView
+                    android:id="@+id/tvFilterActivities"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Activities"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/white"/>
+
+                <!-- Replace with MaterialCheckBox for a more modern look -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbGym"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gym"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbBike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cycling"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbHiking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hiking"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbRun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Running"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbSwim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Swimming"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Card for Fitness Levels -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/title_color">
+
+                <TextView
+                    android:id="@+id/tvFilterFitnessLevels"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fitness Levels"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/white"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbPro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Professional"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbGood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Very Good"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbMid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mediocre"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbBeginner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Beginner"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/title_color">
+
+                <TextView
+                    android:id="@+id/tvLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@color/white"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Location"
+                    android:buttonTint="@color/checkbox_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>

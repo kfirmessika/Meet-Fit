@@ -124,6 +124,7 @@
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/purple_700" />
                 <TextView
+                    android:id="@+id/termsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Agree to our Terms and Conditions"
@@ -146,17 +147,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
 
-        <!-- Login Text -->
-        <TextView
-            android:id="@+id/tvLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already have an account? Login"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:textSize="14sp"
-            android:clickable="true"
-            android:focusable="true" />
+
     </LinearLayout>
 </ScrollView>

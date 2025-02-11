@@ -22,15 +22,7 @@
         android:background="@color/white"
         android:padding="10dp">
 
-        <!-- Settings button aligned to the left -->
 
-
-        <Button
-            android:id="@+id/btnSettings"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="start"
-            android:background="@drawable/settings" />
 
         <!-- Spacer to push buttons apart -->
         <View

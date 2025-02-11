@@ -23,10 +23,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meet_fit.R;
-import com.example.meet_fit.adapters.EventsAdapter;
 import com.example.meet_fit.adapters.RecyclerAdapter;
 import com.example.meet_fit.models.Event;
 import com.example.meet_fit.models.Info;
@@ -57,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     private String currentUserUid;
 
-    private RecyclerView rv;
-    private EventsAdapter eventsAdapter;
-    private ArrayList<Event> allEventsList = new ArrayList<>();
 
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
 
@@ -85,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
     public interface OnEventsFetchedListener {
         void onEventsFetched(ArrayList<Event> events);
+    }
+
+    public interface OnUsernameFetchedListener {
+        void onUsernameFetched(String username);
     }
 
     private  String getCurrentUserId() {
@@ -637,8 +636,12 @@ public class MainActivity extends AppCompatActivity {
         eventMap.put("fitLevel",   event.getFitLevel());
         eventMap.put("aboutEvent", event.getAboutEvent());
         eventMap.put("location",   event.getLocation());
-        eventMap.put("date",       dateTimestamp); // Stored as a number
-        eventMap.put("time",       timeString);    // Stored as a string
+        eventMap.put("date",       dateTimestamp);
+        eventMap.put("time",       timeString);// Stored as a number
+        eventMap.put("uId",   userId);// Stored as a number
+        eventMap.put("eventId",    event.getEventId());
+
+        eventMap.put("participants", event.getParticipants());// Stored as a string
 
         // Determine the next event key (e.g., event1, event2, ...)
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -721,6 +724,16 @@ public class MainActivity extends AppCompatActivity {
             String activity   = snapshot.child("activity").getValue(String.class);
             String fitLevel   = snapshot.child("fitLevel").getValue(String.class);
             String location   = snapshot.child("location").getValue(String.class);
+            String userName   = snapshot.child("uId").getValue(String.class);
+            String userId   = snapshot.child("eventId").getValue(String.class);
+            List<String> participantsList = new ArrayList<>();
+            DataSnapshot participantsSnap = snapshot.child("participants");
+            if (participantsSnap.exists()) {
+                for (DataSnapshot p : participantsSnap.getChildren()) {
+                    String participant = p.getValue(String.class);
+                    participantsList.add(participant);
+                }
+            }
 
             // date stored as a Long (timestamp)
             Long dateLong = snapshot.child("date").getValue(Long.class);
@@ -733,12 +746,50 @@ public class MainActivity extends AppCompatActivity {
                 localTime = LocalTime.parse(timeStr, timeFormatter);
             }
 
-            return new Event(activity, localTime, fitLevel, aboutEvent, location, date);
+            return new Event(activity, localTime, fitLevel, aboutEvent, location, date,participantsList,userName,userId);
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+    public void getUsernameOfCurrentUser(OnUsernameFetchedListener listener) {
+        // Check if user is logged in
+        if (mAuth.getCurrentUser() == null) {
+            listener.onUsernameFetched(null);
+            return;
+        }
+
+        String userId = mAuth.getCurrentUser().getUid();
+        // Path: users -> userId -> info -> userName
+        DatabaseReference userNameRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("info")
+                .child("userName");
+
+        userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String userName = snapshot.getValue(String.class);
+                // Return the username to the caller via callback
+                if (listener != null) {
+                    listener.onUsernameFetched(userName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // On error, pass null or handle differently
+                if (listener != null) {
+                    listener.onUsernameFetched(null);
+                }
+            }
+        });
+    }
+
+
+
 
 }

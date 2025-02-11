@@ -1,5 +1,6 @@
 package com.example.meet_fit.fragmetns;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.meet_fit.R;
@@ -51,6 +55,44 @@ public class register extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_register, container, false);
+
+        TextView terms = rootview.findViewById(R.id.termsText);
+
+        terms.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View view) {
+                // Create a scrollable message with terms and conditions
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Terms and Conditions");
+
+                // Create a TextView for the terms message
+                TextView message = new TextView(requireContext());
+                message.setText("Welcome to our Sports Meeting and Events App. By using this app, you agree to the following terms and conditions:\n\n"
+                        + "1. You must be at least 18 years old to create or join events.\n"
+                        + "2. The app is not responsible for any injury, harm, or damages caused during events.\n"
+                        + "3. Users must behave respectfully and responsibly at all times.\n"
+                        + "4. The app reserves the right to remove events or users violating terms.\n"
+                        + "5. Your data will be used in accordance with our Privacy Policy.\n\n"
+                        + "By continuing, you accept all terms and conditions.");
+                message.setPadding(50, 50, 50, 50);
+                message.setTextSize(16f);
+
+                // Add a ScrollView to make the message scrollable
+                ScrollView scrollView = new ScrollView(requireContext());
+                scrollView.addView(message);
+
+                builder.setView(scrollView);
+
+                // Add an OK button to dismiss the dialog
+                builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+                // Show the dialog
+                builder.show();
+
+            }
+        });
+
         Button buttonContinue = rootview.findViewById(R.id.btnContinue);
         buttonContinue.setOnClickListener(view -> {
             MainActivity main = (MainActivity) getActivity();
@@ -61,11 +103,8 @@ public class register extends Fragment {
             User user = new User(email, password);
             ValidateSignUpInputs( user ,passwordVerification, rootview, main);
 
-
-
-
-
         });
+
 
         return rootview;
     }

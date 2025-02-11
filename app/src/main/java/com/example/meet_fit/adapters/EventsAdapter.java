@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,16 +17,37 @@ import com.google.android.material.card.MaterialCardView;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
+    public interface OnEventActionListener {
+        void onJoinClicked(Event event);
+    }
+
     private final ArrayList<Event> eventsList;
+    private final OnEventActionListener eventActionListener;
+
+    private final String currentUserName;
+
+    public EventsAdapter(ArrayList<Event> eventsList,
+                         OnEventActionListener listener,
+                         String currentUserName) {
+        this.eventsList = eventsList;
+        this.eventActionListener = listener;
+        this.currentUserName = currentUserName;  // store the current user's name
+    }
+    public void updateData(List<Event> newEvents) {
+        eventsList.clear();
+        eventsList.addAll(newEvents);
+        notifyDataSetChanged();
+    }
+
+
 
     // Constructor
-    public EventsAdapter(ArrayList<Event> eventsList) {
-        this.eventsList = eventsList;
-    }
+
 
     @NonNull
     @Override
@@ -35,6 +55,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         // Inflate item_event layout
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.events_recycler, parent, false);
+
         return new EventViewHolder(view);
     }
 
@@ -42,6 +63,22 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         // Get the Event object
         Event event = eventsList.get(position);
+
+        boolean userAlreadyJoined = false;
+        if (event.getParticipants() != null) {
+            userAlreadyJoined = event.getParticipants().contains(currentUserName);
+        }
+
+        if (userAlreadyJoined) {
+            // Already joined -> Disable the button
+            holder.btnJoin.setEnabled(false);
+            holder.btnJoin.setText("Joined");
+        } else {
+            // Not joined -> Enable the button
+            holder.btnJoin.setEnabled(true);
+            holder.btnJoin.setText("Join");
+        }
+
 
         // 1) Update placeholders (activity images)
         String activity = event.getActivity();
@@ -74,12 +111,21 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         holder.tvAboutValue.setText(event.getAboutEvent());
 
         // 3) We don’t have participants count in the Event model, so set a placeholder or 0
-        holder.tvParticipentsValue.setText("0"); // or dynamic if you have that data
+        holder.tvParticipentsValue.setText(
+                String.valueOf(event.getParticipants().size())
+        ); // or dynamic if you have that data
 
         // 4) Button “Join” click example
-        holder.btnJoin.setOnClickListener(v ->
-                Toast.makeText(v.getContext(), "Join " + event.getActivity(), Toast.LENGTH_SHORT).show()
-        );
+        holder.btnJoin.setOnClickListener(v -> {
+            if (eventActionListener != null) {
+                eventActionListener.onJoinClicked(event);
+                holder.btnJoin.setEnabled(false);
+                holder.btnJoin.setText("Joined");
+
+            }
+        });
+
+
     }
 
     @Override
@@ -140,6 +186,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             tvAboutValue          = itemView.findViewById(R.id.tvAboutValue);
             btnJoin               = itemView.findViewById(R.id.btnJoin);
         }
+
+
+
+
     }
 }
 
