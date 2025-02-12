@@ -371,6 +371,7 @@ public class Events extends Fragment implements EventsAdapter.OnEventActionListe
     private boolean isPastEvent(Event event) {
         if (event.getDate() == null || event.getTime() == null) {
             // If either date or time is missing, treat the event as past
+
             Log.d("EventsFragment", "Event missing date/time: " + event.getEventId());
             return true;
         }
@@ -386,11 +387,13 @@ public class Events extends Fragment implements EventsAdapter.OnEventActionListe
         LocalDateTime eventDateTime = LocalDateTime.of(eventLocalDate, eventLocalTime);
 
         // Get current LocalDateTime
-        LocalDateTime now = LocalDateTime.now();
+        ZoneId israelZone = ZoneId.of("Asia/Jerusalem");
+        LocalDateTime israelTime = LocalDateTime.now(israelZone);
 
-        Log.d("EventsFragment", "Comparing eventDateTime=" + eventDateTime + " to now=" + now);
 
-        return eventDateTime.isBefore(now);
+        Log.d("EventsFragment", "Comparing eventDateTime=" + eventDateTime + " to now=" + israelTime);
+
+        return eventDateTime.isBefore(israelTime);
     }
 
     private void checkCalendarPermissions(Event event) {

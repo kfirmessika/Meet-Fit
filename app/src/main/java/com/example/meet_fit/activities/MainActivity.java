@@ -38,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalTime;
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void register(User user ,SaveInfoCallback callback) {
         // Check if user exists in the database
-        if (checkUser()) {
+        if (checkUser(user.getEmail())) {
             Toast.makeText(MainActivity.this, "This user already exists", Toast.LENGTH_LONG).show();
             callback.onSaveComplete(false);
         } else {
@@ -179,20 +180,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean checkUser() {
+    public boolean checkUser(String email) {
+
         // Create a boolean wrapper to store the result
         final boolean[] userExists = {false};
 
-        // Get a reference to the "users" node in your database
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference myRef = database.getReference("users").child(uid);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
 
-        // Add a listener to check if the node exists
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Create a query to search for the email.
+        Query query = ref.orderByChild("user/email").equalTo(email);
+
+        // Execute the query. This is asynchronous.
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // If the snapshot exists, the user exists in the database
-                if (snapshot.exists()) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // If the snapshot exists, then the email was found.
+                if (dataSnapshot.exists()) {
                     userExists[0] = true;
                 } else {
                     userExists[0] = false;
@@ -200,11 +203,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                System.err.println("Error: " + error.getMessage());
+            public void onCancelled(DatabaseError databaseError) {
+                // In case of an error, you can either treat it as "not found" or handle it differently.
+
             }
         });
-
         // Return the result (might need to handle async in real-time scenarios)
         return userExists[0];
     }
