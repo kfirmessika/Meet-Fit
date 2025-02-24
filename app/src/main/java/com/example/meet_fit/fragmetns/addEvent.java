@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,9 @@ import com.example.meet_fit.R;
 import com.example.meet_fit.activities.MainActivity;
 import com.example.meet_fit.models.Event;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -295,22 +300,49 @@ public class addEvent extends Fragment {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            // Request permissions
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            // Request permissions if not granted
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             return;
         }
 
-        // Get the last known location
+        // Try to get the last known location
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
-
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 getCityNameFromCoordinates(latitude, longitude);
-
             } else {
-                Toast.makeText(getContext(), "Unable to fetch location. Try again.", Toast.LENGTH_SHORT).show();
+                // If last location is null, request a fresh location update
+                LocationRequest locationRequest = LocationRequest.create();
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                locationRequest.setInterval(10000); // 10 seconds interval
+                locationRequest.setFastestInterval(5000); // 5 seconds fastest interval
+
+                LocationCallback locationCallback = new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult == null) {
+                            Toast.makeText(getContext(), "Unable to fetch location. Try again.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        for (Location loc : locationResult.getLocations()) {
+                            if (loc != null) {
+                                double lat = loc.getLatitude();
+                                double lon = loc.getLongitude();
+                                getCityNameFromCoordinates(lat, lon);
+                                // Stop further updates once a location is obtained
+                                fusedLocationProviderClient.removeLocationUpdates(this);
+                                break;
+                            }
+                        }
+                    }
+                };
+
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
             }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Failed to fetch location: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 
